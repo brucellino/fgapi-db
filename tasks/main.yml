@@ -19,5 +19,22 @@
       - 3306
     volumes:
       - "{{ sql_data_dir }}:/var/lib/mysql"
+    keep_volumes: true
     env:
       MYSQL_ROOT_PASSWORD: "{{ db_root_password }}"
+#  User should be kept in group_vars - it is set in the API Server config
+      MYSQL_USER: "{{ api_db_username }}"
+      MYSQL_PASSWORD: "{{ api_db_userpass}}"
+  register: db_config
+
+- name: debug the db config
+  debug:
+    var: db_config.ansible_facts.ansible_docker_container.NetworkSettings.IPAddress
+
+- name: Ensure  that the db is present
+  mysql_db:
+    name: "{{ api_db_name }}"
+    login_host: "{{ db_config.ansible_facts.ansible_docker_container.NetworkSettings.IPAddress }}"
+    login_user: root
+    login_password: "{{ db_root_password }}"
+    state: present
