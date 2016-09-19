@@ -7,5 +7,17 @@
 
 - name: Ensure that the MySQL docker image is present
   docker_image:
-    name: mysql/mysql-server
+    name: "{{ docker_sql_image }}"
     state: present
+
+- name: Ensure that the container is started
+  docker_container:
+    name: "{{ db_container_name }}"
+    image: "{{ docker_sql_image }}"
+    state: started
+    exposed_ports:
+      - 3306
+    volumes:
+      - "{{ sql_data_dir }}:/var/lib/mysql"
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ db_root_password }}"

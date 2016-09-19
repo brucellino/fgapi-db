@@ -1,5 +1,11 @@
 ---
 # vars file for fgapi-db
 
+# What base image will you be using for the sql db
+docker_sql_image: "mysql/mysql-server"
+# What name do you want to give the running container ?
+db_container_name: "fg-db"
+# root password of the db - put this in your group_vars and then in a vault in production
+db_root_password: "changeme"
 # where will we store the SQL data ?
 sql_data_dir: /tmp/fgapi-server-db-data/
