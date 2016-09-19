@@ -33,8 +33,9 @@
 
 - name: Ensure  that the db is present
   mysql_db:
-    name: "{{ api_db_name }}"
+    name: all
     login_host: "{{ db_config.ansible_facts.ansible_docker_container.NetworkSettings.IPAddress }}"
     login_user: root
     login_password: "{{ db_root_password }}"
-    state: present
+    state: import
+    target: "{{ lookup('env','PWD')}}/roles/fgapi-db/files/fgapiserver_db.sql"
