@@ -1,2 +1,5 @@
 ---
 # vars file for fgapi-db
+
+# where will we store the SQL data ?
+- sql_data_dir: /tmp/fgapi-server-db-data/

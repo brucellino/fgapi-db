@@ -26,4 +26,5 @@ script:
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
 
 notifications:
+  slack: africa-arabia-roc:j7hkgZIE63IvGD6kONCt1if5
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

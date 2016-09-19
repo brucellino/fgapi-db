@@ -1,2 +1,11 @@
 ---
 # tasks file for fgapi-db
+- name: Ensure that the data storage is available locally
+  file:
+    path: "{{ sql_data_dir }}"
+    state: directory
+
+- name: Ensure that the MySQL docker image is present
+  docker_image:
+    name: mysql/mysql-server
+    state: present
