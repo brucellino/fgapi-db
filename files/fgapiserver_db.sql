@@ -1,4 +1,4 @@
-``--
+--
 -- fgapiserver_db.sql
 --
 -- Copyright (c) 2015:
