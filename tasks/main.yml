@@ -13,6 +13,7 @@
 - name: Ensure that the container is started
   docker_container:
     name: "{{ db_container_name }}"
+    hostname: "{{ db_container_name }}"
     image: "{{ docker_sql_image }}"
     state: started
     exposed_ports:
