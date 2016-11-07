@@ -5,6 +5,15 @@
     path: "{{ sql_data_dir }}"
     state: directory
 
+- name: data container
+  docker_container:
+    name: fgapi-db-data
+    image: alpine
+    command: sleep infinity
+    volumes:
+      - /data
+    state: started
+
 - name: Ensure that the MySQL docker image is present
   docker_image:
     name: "{{ docker_sql_image }}"
@@ -16,6 +25,7 @@
     hostname: "{{ db_container_name }}"
     image: "{{ docker_sql_image }}"
     state: started
+    detach: True
     exposed_ports:
       - 3306
     volumes:
@@ -26,16 +36,25 @@
 #  User should be kept in group_vars - it is set in the API Server config
       MYSQL_USER: "{{ api_db_username }}"
       MYSQL_PASSWORD: "{{ api_db_userpass}}"
-  register: db_config
+  register: ansible_docker_container
 
-- name: debug the db config
+- name:  Create db group
+  add_host:
+    name: "{{ db_container_name }}"
+    groups: db
+  with_items:
+    - "{{ db_container_name }}"
+
+- setup:
+- name: Get some info
   debug:
-    var: db_config.ansible_facts.ansible_docker_container.NetworkSettings.IPAddress
+    var: hostvars[groups['db-servers'] | first ]
 
 - name: Ensure  that the db is present
   mysql_db:
     name: all
-    login_host: "{{ db_config.ansible_facts.ansible_docker_container.NetworkSettings.IPAddress }}"
+    #login_host: "{{ db_config.ansible_facts.ansible_docker_container.NetworkSettings.IPAddress }}"
+    login_host: 172.17.0.2
     login_user: root
     login_password: "{{ db_root_password }}"
     state: import
